@@ -14,14 +14,30 @@ function validation(row, column, playerOneTurn, state_board, flip) {
             return false;
         }
     } else {
-        checkHorizontal(row, column, playerOneTurn, state_board, 1, true);
-        checkVertical(row, column, playerOneTurn, state_board, 1, true);
-        checkPrimaryDiagonal(row, column, playerOneTurn, state_board, 1, true);
-        checkSecondaryDiagonal(row, column, playerOneTurn, state_board, 1, true);
-        checkHorizontal(row, column, playerOneTurn, state_board, -1, true);
-        checkVertical(row, column, playerOneTurn, state_board, -1, true);
-        checkPrimaryDiagonal(row, column, playerOneTurn, state_board, -1, true);
-        checkSecondaryDiagonal(row, column, playerOneTurn, state_board, -1, true);
+        if (checkHorizontal(row, column, playerOneTurn, state_board, 1, false)) {
+            checkHorizontal(row, column, playerOneTurn, state_board, 1, true);
+        }
+        if (checkVertical(row, column, playerOneTurn, state_board, 1, false)) {
+            checkVertical(row, column, playerOneTurn, state_board, 1, true);
+        }
+        if (checkPrimaryDiagonal(row, column, playerOneTurn, state_board, 1, false)) {
+            checkPrimaryDiagonal(row, column, playerOneTurn, state_board, 1, true);
+        }
+        if (checkSecondaryDiagonal(row, column, playerOneTurn, state_board, 1, false)) {
+            checkSecondaryDiagonal(row, column, playerOneTurn, state_board, 1, true);
+        }
+        if (checkHorizontal(row, column, playerOneTurn, state_board, -1, false)) {
+            checkHorizontal(row, column, playerOneTurn, state_board, -1, true);
+        }
+        if (checkVertical(row, column, playerOneTurn, state_board, -1, false)) {
+            checkVertical(row, column, playerOneTurn, state_board, -1, true);
+        }
+        if (checkPrimaryDiagonal(row, column, playerOneTurn, state_board, -1, false)) {
+            checkPrimaryDiagonal(row, column, playerOneTurn, state_board, -1, true);
+        }
+        if (checkSecondaryDiagonal(row, column, playerOneTurn, state_board, -1, false)) {
+            checkSecondaryDiagonal(row, column, playerOneTurn, state_board, -1, true);
+        }
 
         return state_board;
     }
@@ -29,7 +45,7 @@ function validation(row, column, playerOneTurn, state_board, flip) {
 
 
 //HORIZONTAL
-function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip) {
+function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip, count = 0) {
 
     const next_val = state_board[row][column + delta];
 
@@ -37,8 +53,9 @@ function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip) {
     if (playerOneTurn === true) {
         if (flip === false) { //No flip
             if (next_val === -1) {
-                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === 1) {
+                count = count + 1;
+                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === 1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -46,7 +63,7 @@ function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip) {
         } else { // Con flip
             if (next_val === -1) {
                 state_board[row][column + delta] = 1;
-                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
@@ -54,8 +71,9 @@ function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip) {
     else {
         if (flip === false) { //No flip
             if (next_val === 1) {
-                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === -1) {
+                count = count + 1;
+                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === -1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -63,14 +81,14 @@ function checkHorizontal(row, column, playerOneTurn, state_board, delta, flip) {
         } else { // Con flip
             if (next_val === 1) {
                 state_board[row][column + delta] = -1;
-                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkHorizontal(row, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
 };
 
 //VERTICAL
-function checkVertical(row, column, playerOneTurn, state_board, delta, flip) {
+function checkVertical(row, column, playerOneTurn, state_board, delta, flip, count = 0) {
     //Programación defensiva
     if (state_board[row + delta] === undefined) {
         return false;
@@ -82,8 +100,9 @@ function checkVertical(row, column, playerOneTurn, state_board, delta, flip) {
     if (playerOneTurn === true) {
         if (flip === false) { //No flip
             if (next_val === -1) {
-                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === 1) {
+                count = count + 1;
+                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === 1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -91,7 +110,7 @@ function checkVertical(row, column, playerOneTurn, state_board, delta, flip) {
         } else { // Con flip
             if (next_val === -1) {
                 state_board[row + delta][column] = 1;
-                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip);
+                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
@@ -99,8 +118,9 @@ function checkVertical(row, column, playerOneTurn, state_board, delta, flip) {
     else {
         if (flip === false) { //No flip
             if (next_val === 1) {
-                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === -1) {
+                count++;
+                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === -1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -108,14 +128,14 @@ function checkVertical(row, column, playerOneTurn, state_board, delta, flip) {
         } else { // Con flip
             if (next_val === 1) {
                 state_board[row + delta][column] = -1;
-                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip);
+                return checkVertical(row + delta, column, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
 };
 
 //MAIN DIAGONAL
-function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, flip) {
+function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, flip, count = 0) {
     //Programación defensiva
     if (state_board[row + delta] === undefined) {
         return false;
@@ -127,8 +147,9 @@ function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, fl
     if (playerOneTurn === true) {
         if (flip === false) { //No flip
             if (next_val === -1) {
-                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === 1) {
+                count = count + 1;
+                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === 1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -136,7 +157,7 @@ function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, fl
         } else { // Con flip
             if (next_val === -1) {
                 state_board[row + delta][column + delta] = 1;
-                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
@@ -144,8 +165,9 @@ function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, fl
     else {
         if (flip === false) { //No flip
             if (next_val === 1) {
-                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === -1) {
+                count++;
+                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === -1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -153,14 +175,14 @@ function checkPrimaryDiagonal(row, column, playerOneTurn, state_board, delta, fl
         } else { // Con flip
             if (next_val === 1) {
                 state_board[row + delta][column + delta] = -1;
-                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkPrimaryDiagonal(row + delta, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
 };
 
 //MAIN DIAGONAL
-function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, flip) {
+function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, flip, count = 0) {
     //Programación defensiva
     if (state_board[row - delta] === undefined) {
         return false;
@@ -172,8 +194,9 @@ function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, 
     if (playerOneTurn === true) {
         if (flip === false) { //No flip
             if (next_val === -1) {
-                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === 1) {
+                count++;
+                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === 1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -181,7 +204,7 @@ function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, 
         } else { // Con flip
             if (next_val === -1) {
                 state_board[row - delta][column + delta] = 1;
-                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
@@ -189,8 +212,9 @@ function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, 
     else {
         if (flip === false) { //No flip
             if (next_val === 1) {
-                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip);
-            } else if (next_val === -1) {
+                count++;
+                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip, count);
+            } else if (next_val === -1 && count > 0) {
                 return true;
             } else { //En caso no haya posibilidad de voltear fichas.
                 return false;
@@ -198,7 +222,7 @@ function checkSecondaryDiagonal(row, column, playerOneTurn, state_board, delta, 
         } else { // Con flip
             if (next_val === 1) {
                 state_board[row - delta][column + delta] = -1;
-                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip);
+                return checkSecondaryDiagonal(row - delta, column + delta, playerOneTurn, state_board, delta, flip, count);
             }
         }
     }
@@ -256,9 +280,10 @@ const render = (mount, state) => {
     //playerOneTurn y Board
     let { playerOneTurn, playing_board } = state;
 
-    console.log("Player One Turn? ", playerOneTurn)
     const board = document.createElement('div');
     board.style.display = 'flex';
+    board.style.alignSelf = 'center';
+    board.style.justifySelf = 'center';
     board.style.flexWrap = 'wrap';
     board.style.backgroundColor = 'green';
     board.style.width = '600px';
@@ -280,10 +305,7 @@ const render = (mount, state) => {
                     const row = parseInt(box.getAttribute("row_index"));
                     const col = parseInt(box.getAttribute("col_index"));
 
-                    console.log("Onclick ", row, col)
-
                     if (validation(row, col, playerOneTurn, playing_board, false) === true) {
-                        console.log("Entró a validación")
                         validation(row, col, playerOneTurn, playing_board, true);
                         playing_board[row][col] = playerOneTurn ? 1 : -1;
                         state.playerOneTurn = !state.playerOneTurn;
@@ -319,16 +341,3 @@ const APP_STATE = {
 const root = document.getElementById('root');
 
 render(root, APP_STATE);
-
-const test_board = [
-    [0, 1, 2, 3, 4, 5, 6, 7],
-    [1, -1, 0, -1, 0, -1, 0, 0],
-    [2, 0, -1, -1, -1, 0, 0, 0],
-    [3, -1, -1, 0, -1, -1, -1, 0],
-    [4, 0, -1, -1, -1, 0, 0, 0],
-    [5, -1, 0, -1, 0, -1, 0, 0],
-    [6, 0, 0, -1, 0, 0, -1, 0],
-    [7, 0, 0, 0, 0, 0, 0, 0]
-]
-
-// console.log("Validation: ", validation(7, 7, true, test_board, false))
